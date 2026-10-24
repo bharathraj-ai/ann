@@ -74,6 +74,9 @@ class ANN:
 
         self.w3 -= learning_rate * dW3
         self.b3 -= learning_rate * db3
+    def predict(self, X):
+        self.probabilities = self.forward_propagation(X)
+        return (self.probabilities >= 0.5).astype(int)
 
 # 1. Generate dataset
 x, y = make_moons(n_samples=1000, noise=0.2, random_state=42)
@@ -127,6 +130,19 @@ accuracy = np.mean(test_pred == y_test) * 100
 
 print("\n--- Model Evaluation ---")
 print(f"Test Accuracy: {accuracy:.2f}%")
+# Predict a new sample
+sample = np.array([[0.5, 0.5]])
+
+prediction = model.predict(sample)
+
+print("Input:", sample)
+print("Predicted class:", prediction[0, 0])
+sample = np.array([[0.5, 0.5]])
+sample_scaled = scaler.transform(sample)
+
+prediction = model.predict(sample_scaled)
+
+print("Predicted class:", prediction[0, 0])
 # Visualize decision boundary
 x_min, x_max = x[:, 0].min() - 0.5, x[:, 0].max() + 0.5
 y_min, y_max = x[:, 1].min() - 0.5, x[:, 1].max() + 0.5
